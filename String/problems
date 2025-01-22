@@ -1,0 +1,44 @@
+#include <iostream>
+#include <string> 
+using namespace std;
+
+// Remove Outermost paranthesis
+
+string removeparanthesis( string s){
+    int cnt = 0;
+    string ans = "";
+    for(int i = 0; i<s.length(); i++){
+        if(s[i] == ')' ) cnt -- ;
+        if(cnt != 0){ ans.push_back(s[i]);
+        }
+        if(s[i] == '(' )   cnt ++;    }
+    return ans;
+}
+
+
+// Reversing the words  
+            // [" The pen"]  ==> to ["pen The"]
+
+
+string reversewords(string s){
+    int n = s.length();
+    string ans = "";
+
+    reverse(s.begin(), s.end());
+
+    for(int i = 0; i<n ; i++){
+        string word = "";
+        while(i<n && s[i]!= ' '){           // This logic is written to seprate the words from the string
+            word += s[i];       
+            i++;
+        }
+
+        reverse(word.begin(), word.end());
+        if(word.length() > 0){
+            ans += " " + word;
+        }
+    }
+
+    return ans.substr(1);
+
+}
