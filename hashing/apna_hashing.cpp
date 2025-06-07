@@ -18,36 +18,126 @@ class Node{
         }
 };
 
-class HashTable{
+#include <iostream>
+using namespace std;
+
+// Node class for the linked list
+class Node {
+public:
+    string key;
+    int val;
+    Node* next;
+
+    Node(string k, int v) {
+        key = k;
+        val = v;
+        next = NULL;
+    }
+};
+
+class HashTable {
     int totSize;
     int currSize;
     Node** table;
 
-    public:     
-        HashTable(int size=5){
-            totSize = size;
-            currSize = 0;
+    int HashFunction(string key) {
+        int hash = 0;
+        for (char ch : key) {
+            hash = (hash * 31 + ch) % totSize;
+        }
+        return hash;
+    }
 
-            table = new Node*[totSize];
+public:
+    HashTable(int size = 5) {
+        totSize = size;
+        currSize = 0;
+        table = new Node*[totSize];
 
-            for(int i = 0; i<totSize; i++){
-                table[i] = NULL;
+        for (int i = 0; i < totSize; i++) {
+            table[i] = NULL;
+        }
+    }
+
+    void insert(string key, int val) {
+        int idx = HashFunction(key);
+        Node* temp = table[idx];
+
+        // Check if key already exists, update value if found
+        while (temp != NULL) {
+            if (temp->key == key) {
+                temp->val = val;
+                return;
             }
-
+            temp = temp->next;
         }
 
-        void insert(string key, val){
+        // Insert new node at head (chaining)
+        Node* newNode = new Node(key, val);
+        newNode->next = table[idx];
+        table[idx] = newNode;
+        currSize++;
+    }
 
+    bool exists(string key) {
+        int idx = HashFunction(key);
+        Node* temp = table[idx];
+        while (temp != NULL) {
+            if (temp->key == key) {
+                return true;
+            }
+            temp = temp->next;
         }
+        return false;
+    }
 
-        void remove(string key){
+    void remove(string key) {
+        int idx = HashFunction(key);
+        Node* temp = table[idx];
+        Node* prev = NULL;
 
+        while (temp != NULL) {
+            if (temp->key == key) {
+                if (prev == NULL) {
+                    table[idx] = temp->next;
+                } else {
+                    prev->next = temp->next;
+                }
+                delete temp;
+                currSize--;
+                return;
+            }
+            prev = temp;
+            temp = temp->next;
         }
+    }
 
-        int search(string key){
-            
+    int search(string key) {
+        int idx = HashFunction(key);
+        Node* temp = table[idx];
+        while (temp != NULL) {
+            if (temp->key == key) {
+                return temp->val;
+            }
+            temp = temp->next;
         }
-}
+        return -1; // Key not found
+    }
+
+    ~HashTable() {
+        // Free memory
+        for (int i = 0; i < totSize; i++) {
+            Node* temp = table[i];
+            while (temp != NULL) {
+                Node* next = temp->next;
+                delete temp;
+                temp = next;
+            }
+        }
+        delete[] table;
+    }
+};
+
 int main(){
 
     //UNORDERED_MAP 
