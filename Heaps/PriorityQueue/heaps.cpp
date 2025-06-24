@@ -158,7 +158,7 @@ int main(){
     ep.push(make_pair("bhumika", 1000));
     ep.push(make_pair("chetan", 2000));
 
-    while(!pq.empty()){
+    while(!ep.empty()){
         cout << "top" << ep.top().first << ", " << ep.top().second << endl;
         ep.pop();
     }
