@@ -187,6 +187,10 @@ int diam1(Node* root){
 
 pair<int, int> diam2(Node* root){
 
+    if(root == NULL){
+        return {0, 0};
+    }
+
     pair<int, int> leftInfo = diam2(root->left); // LD, LH
     pair<int, int> rightInfo = diam2(root->right); // RD, RH
 
