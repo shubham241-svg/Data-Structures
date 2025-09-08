@@ -340,8 +340,75 @@ bool detectcycdfs(int V, vector<int> adj[]){
 
 
 
+// Bipartite graph
+
+class Solution {
+public:
+    bool dfs(int start,int col, vector<int> &color, vector<vector<int>> &graph){
+
+            color[start] = col;
+            
+            for(auto &it: graph[start]){
+                if(color[it] == -1){
+                    if(dfs(it, !col, color, graph) == false) return false;
+                }
+                else if(color[it] == col) return false;
+            }
+
+            return true;
 
 
+    }
+    bool isBipartite(vector<vector<int>>& graph) {
+
+       int v = graph.size();
+       vector<int> color(v, -1);
+
+       for(int i = 0; i < v; i++){
+            if(color[i] == -1){
+                if(dfs(i,0, color, graph) == false) return false;
+            }
+       }
+
+       return true;
+
+        
+    }
+};
+
+
+// detect cycle in a directed graph
+
+bool dfs(int it, vector<int> vis, vector<int> path, vector<vector<int>> adj){
+    vis[it] = 1;
+    path[it] =1;
+
+    for(auto i: adj[node]){
+        // when the node is not visited
+        if(!vis[i]){
+            if(dfs(i, adj, vis, pathvis) == true) return true;
+
+        }
+        else if(path[it]) return true;
+    }
+    path[it] = 1;
+    return false;
+
+}
+
+bool directedgraph(int v, vector<vector<int>> adj){
+
+    vector<int> vis(v+1, 0);
+    vector<int> path(v+1, 0);
+
+    for(int i = 1; i<v; i++){
+        if(v[i] == 0){
+             if(dfs(v[i], vis, path, adj) == true) return true;
+        }
+    }
+
+    return false;
+}
 
 
 int main(){
@@ -392,3 +459,4 @@ int main(){
     return 0;
 
 }
+
