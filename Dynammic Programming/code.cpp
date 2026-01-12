@@ -83,7 +83,7 @@ int climbstairs(int n ){
 
     int f(int n, vector<int> &dp){
         if(n == 0) return 0;
-        if(dp[n] != -1) return dp[n];
+        if(dp[n] != -1) return dp[ ];
         int left = f(n-1) + abs(f[n] - f[n-2]);
         int right = f(n-2) + abs(f[n] - f[n-2]);
 
@@ -95,7 +95,7 @@ int climbstairs(int n ){
         int prev = 0;
         int prev1 =0;
 
-        for(int i = 1; i<n){
+        for(int i = 1; i<n; i++){
             int fs = prev + abs(frog[n] - frog[n-1]);
             int ss = INT_MAX;
             if(i > 1) ss = prev1 + abs(frog[n] - frog[n-2]);
@@ -107,3 +107,75 @@ int climbstairs(int n ){
 
         return prev;
     }
+
+
+// frogs with k jumps
+
+class Solution {
+public:
+    int helper(vector<int>& heights, int n, int k) {
+        if (n == 0) return 0;  // base case: first stone cost = 0
+
+        int mm = INT_MAX;
+        for (int j = 1; j <= k; j++) {
+            if (n - j >= 0) {
+                int fs = helper(heights, n - j, k) 
+                         + abs(heights[n] - heights[n - j]);
+                mm = min(mm, fs);
+            }
+        }
+        return mm;
+    }
+
+    int frogJump(vector<int>& heights, int k) {
+        int n = heights.size();
+        return helper(heights, n - 1, k);
+    }
+};
+
+// memoized one 
+class Solution {
+public:
+    int helper(vector<int>& heights, int n, int k, vector<int>& dp) {
+        if (n == 0) return 0;
+        if (dp[n] != -1) return dp[n];
+
+        int mm = INT_MAX;
+        for (int j = 1; j <= k; j++) {
+            if (n - j >= 0) {
+                int fs = helper(heights, n - j, k, dp) 
+                         + abs(heights[n] - heights[n - j]);
+                mm = min(mm, fs);
+            }
+        }
+        return dp[n] = mm;
+    }
+
+    int frogJump(vector<int>& heights, int k) {
+        int n = heights.size();
+        vector<int> dp(n, -1);
+        return helper(heights, n - 1, k, dp);
+    }
+};
+
+// tabulated one
+
+class Solution {
+public:
+    int frogJump(vector<int>& heights, int k) {
+        int n = heights.size();
+        vector<int> dp(n, INT_MAX);
+
+        dp[0] = 0; // cost to stay at stone 0 is 0
+
+        for (int i = 1; i < n; i++) {
+            for (int j = 1; j <= k; j++) {
+                if (i - j >= 0) {
+                    dp[i] = min(dp[i], dp[i - j] + abs(heights[i] - heights[i - j]));
+                }
+            }
+        }
+
+        return dp[n - 1];
+    }
+};
